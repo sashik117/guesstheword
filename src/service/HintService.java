@@ -9,14 +9,14 @@ public class HintService {
 
     private final List<Hint> hints = new ArrayList<>();
 
-    // Create
+    // Створити
     public Hint create(String text, int level) {
         Hint hint = new Hint(text, level);
         hints.add(hint);
         return hint;
     }
 
-    // Read (Get by ID)
+    // Читати (отримати за ID)
     public Hint getById(UUID id) {
         return hints.stream()
             .filter(hint -> hint.getId().equals(id))
@@ -24,7 +24,7 @@ public class HintService {
             .orElse(null);
     }
 
-    // Update
+    // Оновити
     public boolean update(UUID id, String newText, int newLevel) {
         Hint hint = getById(id);
         if (hint != null) {
@@ -35,23 +35,22 @@ public class HintService {
         return false;
     }
 
-    // Delete
+    // Видалити
     public boolean delete(UUID id) {
         return hints.removeIf(hint -> hint.getId().equals(id));
     }
 
-    // Search by text
+    // Пошук за текстом
     public List<Hint> searchByText(String text) {
         return hints.stream()
             .filter(hint -> hint.getText().toLowerCase().contains(text.toLowerCase()))
             .toList();
     }
 
-    // Filter by level
+    // Фільтрація за рівнем
     public List<Hint> filterByLevel(int level) {
         return hints.stream()
             .filter(hint -> hint.getLevel() == level)
             .toList();
     }
 }
-

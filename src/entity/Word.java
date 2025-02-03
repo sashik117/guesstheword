@@ -5,7 +5,7 @@ import java.util.UUID;
 public class Word {
 
     private UUID id;
-    private String text;
+    private String text;   // Текст слова, має бути на українській мові
     private String category;
     private int complexity;
 
@@ -46,6 +46,27 @@ public class Word {
 
     public void setComplexity(int complexity) {
         this.complexity = complexity;
+    }
+
+    // Повертає першу букву для підсказки
+    public String getFirstLetterHint() {
+        return "Перша буква: " + text.charAt(0);  // Повертаємо першу букву слова
+    }
+
+    // Повертає другу букву для підсказки
+    public String getSecondLetterHint() {
+        return "Друга буква: " + text.charAt(1);  // Повертаємо другу букву слова
+    }
+
+    // Повертає третю букву для підсказки
+    public String getThirdLetterHint() {
+        return "Третя буква: " + text.charAt(2);  // Повертаємо третю букву слова
+    }
+
+    // Повертає опис для підсказки
+    public String getDescriptionHint() {
+        // Тут треба додати більш детальний опис предмету
+        return "Це об'єкт, який має важливе значення в нашому житті.";
     }
 
     @Override

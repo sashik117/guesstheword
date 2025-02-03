@@ -16,7 +16,7 @@ import reprository.WordRepository;
 public class UnitOfWork {
 
     private final WordRepository wordRepository;
-    private final String filePath;
+    private String filePath;
 
     // Конструктор з параметрами для ініціалізації wordRepository та filePath
     public UnitOfWork(WordRepository wordRepository, String filePath) {
@@ -30,7 +30,7 @@ public class UnitOfWork {
 
     // Конструктор без параметрів, потрібно ініціалізувати змінні
     public UnitOfWork() {
-        this.wordRepository = new WordRepository("words.json", true); // ініціалізація за умовчанням
+        this.wordRepository = new WordRepository(); // Використовуємо конструктор без параметрів
         this.filePath = "words.json"; // ініціалізація за умовчанням
     }
 
@@ -47,7 +47,7 @@ public class UnitOfWork {
 
     // Збереження даних у файл
     public void saveToFile(String filePath) {
-        try (FileWriter writer = new FileWriter(this.filePath)) {
+        try (FileWriter writer = new FileWriter(filePath)) {
             Gson gson = new Gson();
             List<Word> words = wordRepository.getAll();
             gson.toJson(words, writer);
@@ -64,7 +64,11 @@ public class UnitOfWork {
         if (!file.exists()) {
             System.err.println("File not found. Creating a new file.");
             try {
-                file.createNewFile(); // Створюємо новий файл, якщо його немає
+                if (file.createNewFile()) {
+                    System.out.println("File created: " + file.getName());
+                } else {
+                    System.out.println("File already exists.");
+                }
             } catch (IOException e) {
                 System.err.println("Error creating the file: " + e.getMessage());
                 return; // Якщо файл не вдається створити, припиняємо виконання методу
@@ -89,5 +93,14 @@ public class UnitOfWork {
     // Викликаємо метод завантаження з файлу
     public void load() {
         loadFromFile(filePath);
+    }
+
+    // Методи доступу для filePath
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }

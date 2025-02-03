@@ -11,6 +11,8 @@ public class User {
     private int score;
     private int attempts;
     private boolean verified; // Додано поле для верифікації
+    private int gamesPlayed; // Додаємо поле для ігор
+    private int wordsGuessed; // Додаємо поле для відгаданих слів
 
     public User(String name, String email, String password) {
         this.id = UUID.randomUUID();
@@ -20,6 +22,8 @@ public class User {
         this.score = 0;
         this.attempts = 0;
         this.verified = false; // за замовчуванням користувач не верифікований
+        this.gamesPlayed = 0;  // ініціалізація
+        this.wordsGuessed = 0; // ініціалізація
     }
 
     public User(UUID id, String name, String email, String password, boolean verified) {
@@ -30,6 +34,8 @@ public class User {
         this.score = 0;
         this.attempts = 0;
         this.verified = verified;
+        this.gamesPlayed = 0;  // ініціалізація
+        this.wordsGuessed = 0; // ініціалізація
     }
 
     public UUID getId() {
@@ -64,6 +70,23 @@ public class User {
         this.attempts++;
     }
 
+    // Нові гетери для статистики
+    public int getGamesPlayed() {
+        return gamesPlayed;
+    }
+
+    public void incrementGamesPlayed() {
+        this.gamesPlayed++;
+    }
+
+    public int getWordsGuessed() {
+        return wordsGuessed;
+    }
+
+    public void incrementWordsGuessed() {
+        this.wordsGuessed++;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -73,6 +96,8 @@ public class User {
             ", score=" + score +
             ", attempts=" + attempts +
             ", verified=" + verified +
+            ", gamesPlayed=" + gamesPlayed +
+            ", wordsGuessed=" + wordsGuessed +
             '}';
     }
 
