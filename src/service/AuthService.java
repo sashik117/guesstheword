@@ -14,22 +14,25 @@ public class AuthService {
     }
 
     public void register(UserRegisterDto registerDto) {
-        // Перевірка на наявність email в базі
         if (userService.existsByEmail(registerDto.getEmail())) {
             throw new IllegalArgumentException("Цей email вже використовується.");
         }
 
-        // Створення нового користувача
         String hashedPassword = BCrypt.hashpw(registerDto.getPassword(), BCrypt.gensalt());
         User newUser = new User(registerDto.getName(), registerDto.getEmail(), hashedPassword);
         userService.save(newUser);
+        System.out.println("Користувач зареєстрований: " + newUser);
     }
 
     public User login(UserLoginDto loginDto) {
         User user = userService.findByEmail(loginDto.getEmail());
+        if (user == null) {
+            throw new IllegalArgumentException("Користувача не знайдено.");
+        }
         if (!BCrypt.checkpw(loginDto.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("Невірний пароль.");
         }
+        System.out.println("Вхід успішний: " + user.getEmail());
         return user;
     }
 }
