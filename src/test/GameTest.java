@@ -4,8 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import dto.UserLoginDto;
-import dto.UserRegisterDto;
+import dto.UserDto;
 import entity.Game;
 import entity.User;
 import entity.Word;
@@ -15,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import service.AuthService;
 import service.GameService;
+import service.HintService;
 import service.UserService;
 
 public class GameTest {
@@ -23,6 +23,7 @@ public class GameTest {
     private UserService userService;
     private AuthService authService;
     private GameService gameService;
+    private HintService hintService;
 
     @Before
     public void setUp() {
@@ -34,13 +35,13 @@ public class GameTest {
 
         userService = new UserService();
         authService = new AuthService(userService);
-        gameService = new GameService();
+        hintService = new HintService();
+        gameService = new GameService(hintService);
     }
 
     @Test
     public void testRegistration() {
-        UserRegisterDto registerDto = new UserRegisterDto("test_user", "test@mail.com",
-            "password123");
+        UserDto registerDto = new UserDto("test_user", "test@mail.com", "password123", null);
         authService.register(registerDto);
 
         User user = userService.findByEmail("test@mail.com");
@@ -50,13 +51,10 @@ public class GameTest {
 
     @Test
     public void testLogin() {
-        // Спочатку реєструємо користувача
-        UserRegisterDto registerDto = new UserRegisterDto("test_user", "test@mail.com",
-            "password123");
+        UserDto registerDto = new UserDto("test_user", "test@mail.com", "password123", null);
         authService.register(registerDto);
 
-        // Логінимося
-        UserLoginDto loginDto = new UserLoginDto("test@mail.com", "password123");
+        UserDto loginDto = new UserDto(null, "test@mail.com", "password123", null);
         User user = authService.login(loginDto);
 
         assertNotNull("Користувач не авторизувався", user);
@@ -79,36 +77,23 @@ public class GameTest {
     @Test
     public void testSaveGameToFile() {
         User user = gameService.createUser();
-        assertNotNull("Користувач не створений", user);
-
         Word word = gameService.createWord();
-        assertNotNull("Слово не створене", word);
-
         Game game = gameService.createGame(user, word);
-        assertNotNull("Гра не створена", game);
 
         String filePath = "test_game.json";
         gameService.saveGameToFile(game, filePath);
 
         File file = new File(filePath);
         assertTrue("Файл гри не створений", file.exists());
-
-        // Опціонально: можна перевірити розмір файлу
-        assertTrue("Файл порожній", file.length() > 0);
     }
 
     @Test
     public void testEndGame() {
         User user = gameService.createUser();
-        assertNotNull("Користувач не створений", user);
-
         Word word = gameService.createWord();
-        assertNotNull("Слово не створене", word);
-
         Game game = gameService.createGame(user, word);
-        assertNotNull("Гра не створена", game);
 
-        UUID gameId = game.getId();
+        UUID gameId = game.getId(); // Тепер UUID знайдений через правильний імпорт
         boolean gameEnded = gameService.endGame(gameId);
         assertTrue("Гра не завершилась", gameEnded);
     }

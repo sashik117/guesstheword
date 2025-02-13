@@ -9,14 +9,14 @@ public class HintService {
 
     private final List<Hint> hints = new ArrayList<>();
 
-    // Створити
-    public Hint create(String text, int level) {
-        Hint hint = new Hint(text, level);
+    // Створити підсказку
+    public Hint create(String word, String text, int level) {
+        Hint hint = new Hint(word, text, level); // Тепер додаємо слово
         hints.add(hint);
         return hint;
     }
 
-    // Читати (отримати за ID)
+    // Отримати підсказку за ID
     public Hint getById(UUID id) {
         return hints.stream()
             .filter(hint -> hint.getId().equals(id))
@@ -24,30 +24,38 @@ public class HintService {
             .orElse(null);
     }
 
-    // Оновити
+    // Отримати підсказку для певного слова
+    public Hint getHintByWord(String word) {
+        return hints.stream()
+            .filter(hint -> hint.getWord().equals(word))
+            .findFirst()
+            .orElse(null);
+    }
+
+    // Оновити підсказку
     public boolean update(UUID id, String newText, int newLevel) {
         Hint hint = getById(id);
         if (hint != null) {
             hints.remove(hint);
-            hints.add(new Hint(newText, newLevel));
+            hints.add(new Hint(hint.getWord(), newText, newLevel)); // Оновлення підсказки
             return true;
         }
         return false;
     }
 
-    // Видалити
+    // Видалити підсказку
     public boolean delete(UUID id) {
         return hints.removeIf(hint -> hint.getId().equals(id));
     }
 
-    // Пошук за текстом
+    // Пошук підсказок за текстом
     public List<Hint> searchByText(String text) {
         return hints.stream()
             .filter(hint -> hint.getText().toLowerCase().contains(text.toLowerCase()))
             .toList();
     }
 
-    // Фільтрація за рівнем
+    // Фільтрація підсказок за рівнем
     public List<Hint> filterByLevel(int level) {
         return hints.stream()
             .filter(hint -> hint.getLevel() == level)

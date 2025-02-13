@@ -34,7 +34,7 @@ public class UserService {
         List<User> users = readUsersFromJson();
         users.add(user);
         writeUsersToJson(users);
-        System.out.println("Користувач збережений: " + user);
+        System.out.println("Користувач збережений.");
     }
 
     private List<User> readUsersFromJson() {

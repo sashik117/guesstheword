@@ -63,12 +63,6 @@ public class Word {
         return "Третя буква: " + text.charAt(2);  // Повертаємо третю букву слова
     }
 
-    // Повертає опис для підсказки
-    public String getDescriptionHint() {
-        // Тут треба додати більш детальний опис предмету
-        return "Це об'єкт, який має важливе значення в нашому житті.";
-    }
-
     @Override
     public String toString() {
         return "Word{" +

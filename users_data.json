@@ -1,0 +1,24 @@
+[
+  {
+    "id": "9c24fa02-6057-464a-ad41-522efa524f2b",
+    "name": "111",
+    "email": "111@gmail.com",
+    "password": "$2a$10$YKW9s0TTLIJqMk5Sdm3QU.0WXjAE/0yFlmq3uQOQLrFDTrJqwx/Q6",
+    "score": 1,
+    "attempts": 7,
+    "verified": false,
+    "gamesPlayed": 1,
+    "wordsGuessed": 1
+  },
+  {
+    "id": "d75ff3b1-d693-41f7-9c29-b8846a9abc95",
+    "name": "sashka",
+    "email": "sashka7@gmail.com",
+    "password": "$2a$10$KX2JtPkUf2qAHPLoivMUl.nA9CpcqWpAPwhIbe2cbNjpkQ.S84gMy",
+    "score": 1,
+    "attempts": 16,
+    "verified": false,
+    "gamesPlayed": 2,
+    "wordsGuessed": 1
+  }
+]

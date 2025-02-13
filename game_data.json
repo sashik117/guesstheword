@@ -1,22 +1,52 @@
-{
-  "id": "6783a88e-7d77-4451-a18c-bf8f27b76c2b",
-  "startTime": "Feb 2, 2025, 10:10:27 PM",
-  "player": {
-    "id": "3c161ea8-b22d-474f-8bab-69e252e4add7",
-    "name": "Sashka",
-    "email": "sanyoklolik@gmail.com",
-    "password": "$2a$10$NUTpA0PXJzrcUbJSwSZZQO1W4gBzJYwAtRugz2rUPzR52Y5woEt0u",
-    "score": 0,
-    "attempts": 0,
-    "verified": false
+[
+  {
+    "name": "111",
+    "player": {
+      "id": "9c24fa02-6057-464a-ad41-522efa524f2b",
+      "name": "111",
+      "email": "111@gmail.com",
+      "score": 1,
+      "attempts": 7,
+      "gamesPlayed": 1,
+      "wordsGuessed": 1
+    },
+    "word": {
+      "id": "30c7edb5-1e6a-4513-9adf-beafebeb47f2",
+      "text": "яблуко",
+      "category": "фрукти",
+      "complexity": 1
+    },
+    "hintsUsed": 1,
+    "startDate": "12.02.2025",
+    "endDate": null,
+    "active": true
   },
-  "word": {
-    "id": "b2881619-6cdd-4560-ac6b-442717454d3f",
-    "text": "error",
-    "category": "Загальна",
-    "complexity": 3
-  },
-  "hints": [],
-  "attempts": [],
-  "isActive": true
-}
+  {
+    "name": "sashka",
+    "player": {
+      "id": "d75ff3b1-d693-41f7-9c29-b8846a9abc95",
+      "name": "sashka",
+      "email": "sashka7@gmail.com",
+      "score": 1,
+      "attempts": 16,
+      "gamesPlayed": 2,
+      "wordsGuessed": 1
+    },
+    "word": {
+      "id": "2693cfba-3ea2-4961-9859-523188f4e8a0",
+      "text": "місяць",
+      "category": "космос",
+      "complexity": 3
+    },
+    "hintsUsed": 2,
+    "startDate": "12.02.2025",
+    "endDate": null,
+    "active": true,
+    "additionalWord": {
+      "id": "b225a11a-08f6-450b-81fd-a4862bd9b942",
+      "text": "грім",
+      "category": "природа",
+      "complexity": 2
+    }
+  }
+]

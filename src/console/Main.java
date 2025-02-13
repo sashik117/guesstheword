@@ -1,8 +1,7 @@
 package console;
 
 import com.google.gson.Gson;
-import dto.UserLoginDto;
-import dto.UserRegisterDto;
+import dto.UserDto;
 import entity.User;
 import java.util.Scanner;
 import pages.AuthView;
@@ -10,6 +9,7 @@ import pages.GameView;
 import pages.UserView;
 import service.AuthService;
 import service.GameService;
+import service.HintService;
 import service.UserService;
 
 public class Main {
@@ -24,75 +24,78 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         Gson gson = new Gson();
 
-        // Ініціалізація сервісів
         UserService userService = new UserService();
         AuthService authService = new AuthService(userService);
-        GameService gameService = new GameService();
+        HintService hintService = new HintService();
+        GameService gameService = new GameService(hintService);
 
-        // Створення об'єктів для переглядів
         AuthView authView = new AuthView();
-        GameView gameView = new GameView();
+        GameView gameView = new GameView(gameService); // Тепер передаємо GameService
         UserView userView = new UserView();
 
-        // Відображення головного меню
         while (true) {
             System.out.println(BLUE + "====================================");
             System.out.println("      🎮 Welcome to Guess The Word!      ");
             System.out.println("====================================" + RESET);
 
             System.out.println(YELLOW + "1 - Реєстрація");
-            System.out.println("2 - Вхід" + RESET);
+            System.out.println("2 - Вхід");
+            System.out.println("3 - Вихід" + RESET);
             System.out.print("Ваш вибір: ");
 
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Пропускаємо символ нового рядка
+            String input = scanner.nextLine();
+            if (!input.matches("[1-3]")) {
+                System.out.println(RED + "❌ Невірний вибір." + RESET);
+                continue;
+            }
 
-            User user = null;
+            int choice = Integer.parseInt(input);
+            if (choice == 3) {
+                System.out.println(GREEN + "До побачення!" + RESET);
+                break;
+            }
 
             if (choice == 1) {
-                // Логіка реєстрації
-                System.out.print(YELLOW + "[?] Введіть ім'я: " + RESET);
-                String username = scanner.nextLine();
-
-                System.out.print(YELLOW + "[?] Введіть email: " + RESET);
-                String email = scanner.nextLine();
-
-                // Валідація email
-                if (!isValidEmail(email)) {
-                    System.err.println(RED + "❌ Невірний формат email." + RESET);
-                    return;
+                System.out.print(YELLOW + "[?] Введіть ім'я (мін. 3 символи): " + RESET);
+                String username = scanner.nextLine().trim();
+                if (username.length() < 3) {
+                    System.out.println(RED + "❌ Ім'я має містити щонайменше 3 символи!" + RESET);
+                    continue;
                 }
 
-                System.out.print(YELLOW + "[?] Введіть пароль: " + RESET);
-                String password = scanner.nextLine();
+                System.out.print(YELLOW + "[?] Введіть email: " + RESET);
+                String email = scanner.nextLine().trim();
+                if (!isValidEmail(email)) {
+                    System.out.println(RED + "❌ Невірний формат email!" + RESET);
+                    continue;
+                }
 
+                System.out.print(YELLOW + "[?] Введіть пароль (мін. 6 символів): " + RESET);
+                String password = scanner.nextLine().trim();
+                if (password.length() < 6) {
+                    System.out.println(RED + "❌ Пароль має містити щонайменше 6 символів!" + RESET);
+                    continue;
+                }
                 try {
-                    UserRegisterDto registerDto = new UserRegisterDto(username, email, password);
+                    UserDto registerDto = new UserDto(username, email, password, null);
                     authService.register(registerDto);
-                    System.out.println(GREEN + "✔ Реєстрація успішна!" + RESET);
                 } catch (IllegalArgumentException e) {
                     System.err.println(RED + "Помилка реєстрації: " + e.getMessage() + RESET);
-                    return;
                 }
             } else if (choice == 2) {
-                // Логіка входу
                 System.out.print(YELLOW + "[?] Введіть email: " + RESET);
                 String email = scanner.nextLine();
-
                 System.out.print(YELLOW + "[?] Введіть пароль: " + RESET);
                 String password = scanner.nextLine();
-
                 try {
-                    UserLoginDto loginDto = new UserLoginDto(email, password);
-                    user = authService.login(loginDto);
+                    UserDto loginDto = new UserDto(null, email, password, null);
+                    User user = authService.login(loginDto);
                     System.out.println(
-                        GREEN + "✔ Вхід успішний! Ласкаво просимо, " + user.getName() + "! 🎉"
+                        GREEN + "✔️ Вхід успішний! Ласкаво просимо, " + user.getName() + "! 🎉"
                             + RESET);
-
-                    // Після входу викликаємо дисплей меню
                     while (true) {
                         System.out.println(BLUE + "=============================");
-                        System.out.println("      Головне меню користувача      ");
+                        System.out.println("         Головне меню         ");
                         System.out.println("=============================" + RESET);
 
                         System.out.println(YELLOW + "1 - Почати гру");
@@ -101,13 +104,13 @@ public class Main {
                         System.out.print("Ваш вибір: ");
 
                         String actionChoice = scanner.nextLine();
-
                         switch (actionChoice) {
                             case "1":
-                                gameView.displayGame(scanner, gameService, user); // Запуск гри
+                                // Передаємо всі необхідні параметри у displayGame
+                                gameView.displayGame(scanner, gameService, user);
                                 break;
                             case "2":
-                                userView.displayUserMenu(user); // Перегляд статистики
+                                userView.displayUserMenu(user);
                                 break;
                             case "3":
                                 System.out.println(GREEN + "До побачення!" + RESET);
@@ -118,16 +121,11 @@ public class Main {
                     }
                 } catch (IllegalArgumentException e) {
                     System.err.println(RED + "Помилка входу: " + e.getMessage() + RESET);
-                    return;
                 }
-            } else {
-                System.out.println(RED + "❌ Невірний вибір." + RESET);
-                return;
             }
         }
     }
 
-    // Метод для перевірки правильності email через regex
     private static boolean isValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         return email.matches(emailRegex);
